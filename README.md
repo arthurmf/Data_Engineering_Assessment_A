@@ -5,6 +5,8 @@ Data Engineering Challenge for Company A
 
 Build an Extract, Transform, Load (ETL) pipeline that will take this data and move it into a production-ready database that can be easily queried to answer questions for the business.
 
+Additionally, the infrastructure required for hosting and managing the ETL pipeline, including networking and storage, will be provisioned using Terraform.
+
 ---
 
 ## **Requirements**
@@ -17,26 +19,71 @@ Before setting up the environment, ensure that you have the following tools inst
    After installation, configure the AWS CLI with your credentials:
    ```bash
    aws configure
+   ```
+
+2. **Terraform**:  
+   Terraform is used to provision the AWS infrastructure required for the project. You can install Terraform by following the instructions [here](https://developer.hashicorp.com/terraform/tutorials/aws-get-started/install-cli). After installation, verify that Terraform is installed correctly by running:
+   ```bash
+   terraform --version
+   ```
+
+3. **Python**:  
+   Ensure you have Python 3.x installed to execute validation scripts for environment variables. You can download and install Python [here](https://www.python.org/downloads/).
+
 ---
 
 ## **Setting Up Environment Variables**
 
-This project requires specific AWS environment variables to be set before running the ETL pipeline. These environment variables are necessary for authentication with AWS services and ensuring the pipeline runs in the correct environment.
+This project requires specific AWS environment variables to be set before running the ETL pipeline and the infrastructure provisioning process. These environment variables are necessary for authentication with AWS services and ensuring the pipeline and infrastructure run in the correct environment.
 
 The following variables need to be configured:
+
 - `AWS_PROFILE`: The AWS profile to be used for authentication.
 - `AWS_DEFAULT_REGION`: The AWS region where the services will be hosted.
-- `ENVIRONMENT`: The environment (e.g., development, staging, production) for which the pipeline is running.
----
-### **Makefile Commands**
-A `Makefile` is included in the project to help automate the setup and verification of these environment variables.
+- `ENVIRONMENT`: The environment (e.g., development, staging, production) for which the pipeline and infrastructure are being deployed.
 
+### **Makefile Commands**
+
+The `Makefile` includes commands to automate setting up the environment and provisioning the infrastructure using Terraform.
 
 1. **`make env`**: 
-    - Runs a script to set AWS environment variables (`AWS_PROFILE`, `AWS_DEFAULT_REGION`, `ENVIRONMENT`).
+    - Runs a script to set AWS environment variables (`AWS_PROFILE`, `AWS_DEFAULT_REGION`, `ENVIRONMENT`) and makes sure they are available in the current session.
 
 2. **`make check`**: 
     - Verifies that the required environment variables are set using a Python script.
 
-3. **`make` or `make all`**: 
-    - Runs both `env` and `check` to configure and verify the environment variables in one step.
+3. **`make terraform-init`**: 
+    - Initializes Terraform, downloading providers and setting up your environment for infrastructure provisioning.
+
+4. **`make terraform-plan`**: 
+    - Runs Terraform's `plan` command to preview the infrastructure that will be created.
+
+5. **`make terraform-apply`**: 
+    - Applies the Terraform plan to create the infrastructure automatically.
+
+6. **`make terraform-destroy`**: 
+    - Destroys the Terraform-managed infrastructure automatically.
+
+7. **`make all`**: 
+    - Runs the entire setup process in one step. It configures environment variables, verifies them, initializes Terraform, plans the infrastructure, and applies it.
+
+8. **`make clean`**: 
+    - Destroys all infrastructure created by Terraform.
+---
+
+## **Infrastructure Setup Using Terraform**
+
+The infrastructure for this project is managed using **Terraform**. This setup includes the creation of an Amazon S3 bucket for storage, a VPC, subnets, and other necessary networking components. The infrastructure code is located in the `terraform/` directory.
+
+### **Terraform Configuration Files**
+
+The key configuration files for Terraform are:
+
+1. **`resource.tf`**:  
+   This file defines the S3 bucket and related configurations such as server-side encryption and object storage.
+
+2. **`networks.tf`**:  
+   This file contains the configuration for the Virtual Private Cloud (VPC), public subnets, Internet Gateway (IGW), and route tables.
+
+3. **`local.tf`**:  
+   This file defines local variables that are used across the Terraform configuration files, including common tags, network CIDR blocks, and bucket names.
