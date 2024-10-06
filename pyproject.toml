@@ -6,5 +6,6 @@ readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
     "aws-lambda-powertools>=3.0.0",
+    "awswrangler>=3.9.1",
     "python-decouple>=3.8",
 ]
