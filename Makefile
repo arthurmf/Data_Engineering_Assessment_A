@@ -58,13 +58,17 @@ sls-deploy:
 	@echo "Deploying Serverless application..."
 	@cd src && serverless deploy --stage $(ENVIRONMENT)
 
+sls-remove:
+	@echo "Removing Serverless application..."
+	@cd src && serverless remove --stage $(ENVIRONMENT)
+
 # ------------- Default Setup and Cleanup --------------
 
 # Full setup: configure environment, verify variables, initialize Terraform, plan, apply infrastructure, and deploy Serverless
 all: env check terraform-init terraform-plan terraform-apply sls-deploy
 
-# Clean up: destroy the Terraform-managed infrastructure
-clean: terraform-destroy
+# Clean up: destroy the Terraform-managed infrastructure and remove the Serverless application
+clean: terraform-destroy serverless-remove
 
 # Prevent make from looking for files with these names
 .PHONY: env check terraform-init terraform-plan terraform-apply terraform-destroy sls-deploy all clean

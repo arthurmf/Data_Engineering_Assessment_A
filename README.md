@@ -43,7 +43,7 @@ The following variables need to be configured:
 
 ### **Makefile Commands**
 
-The `Makefile` includes commands to automate setting up the environment and provisioning the infrastructure using Terraform.
+The `Makefile` includes commands to automate setting up the environmentm, provisioning the infrastructure using Terraform and deploy the serverless application.
 
 1. **`make env`**:  
    Runs a script to set AWS environment variables (`AWS_PROFILE`, `AWS_DEFAULT_REGION`, `ENVIRONMENT`) and persists them to `~/.bashrc`.
@@ -63,11 +63,17 @@ The `Makefile` includes commands to automate setting up the environment and prov
 6. **`make terraform-destroy`**:  
    Destroys the Terraform-managed infrastructure automatically.
 
-7. **`make all`**:  
+7. **`make sls-deploy`**:
+   Deploy Serverless application
+
+8. **`make sls-remove`**:
+   Removes Serverless application
+
+9. **`make all`**:  
    Runs the entire setup process in one step. It configures environment variables, verifies them, initializes Terraform, plans the infrastructure, and applies it.
 
-8. **`make clean`**:  
-   Destroys all infrastructure created by Terraform.
+10. **`make clean`**:  
+   Destroys all infrastructure created by Terraform and removes the Serverless application
 
 ---
 
