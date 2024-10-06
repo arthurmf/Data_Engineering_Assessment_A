@@ -6,10 +6,10 @@ PYTHON := python3
 
 # ------------- Environment Setup --------------
 
-# Target to source the set_aws_env.sh script and set environment variables in the current session
+# Target to run the set_aws_env.sh script and set environment variables
 env:
 	@echo "Configuring environment variables..."
-	@. ./set_aws_env.sh  # Source the script directly
+	@bash set_aws_env.sh  # Call the external script to set the environment variables
 
 # Check if environment variables are properly set
 check:
@@ -27,17 +27,29 @@ terraform-init:
 # Plan Terraform Infrastructure
 terraform-plan:
 	@echo "Planning Terraform infrastructure..."
-	@cd terraform && TF_VAR_aws_profile=$(AWS_PROFILE) TF_VAR_aws_region=$(AWS_DEFAULT_REGION) TF_VAR_environment=$(ENVIRONMENT) terraform plan
+	@cd terraform && terraform plan \
+		-var="aws_profile=$(TF_VAR_AWS_PROFILE)" \
+		-var="aws_default_region=$(TF_VAR_AWS_DEFAULT_REGION)" \
+		-var="environment=$(TF_VAR_ENVIRONMENT)" \
+		-var="bucket_name=$(TF_VAR_BUCKET_NAME)"
 
 # Apply Terraform Infrastructure
 terraform-apply:
 	@echo "Applying Terraform infrastructure..."
-	@cd terraform && TF_VAR_aws_profile=$(AWS_PROFILE) TF_VAR_aws_region=$(AWS_DEFAULT_REGION) TF_VAR_environment=$(ENVIRONMENT) terraform apply
+	@cd terraform && terraform apply \
+		-var="aws_profile=$(TF_VAR_AWS_PROFILE)" \
+		-var="aws_default_region=$(TF_VAR_AWS_DEFAULT_REGION)" \
+		-var="environment=$(TF_VAR_ENVIRONMENT)" \
+		-var="bucket_name=$(TF_VAR_BUCKET_NAME)"
 
 # Destroy Terraform Infrastructure
 terraform-destroy:
 	@echo "Destroying Terraform infrastructure..."
-	@cd terraform && terraform destroy
+	@cd terraform && terraform destroy \
+		-var="aws_profile=$(TF_VAR_AWS_PROFILE)" \
+		-var="aws_default_region=$(TF_VAR_AWS_DEFAULT_REGION)" \
+		-var="environment=$(TF_VAR_ENVIRONMENT)" \
+		-var="bucket_name=$(TF_VAR_BUCKET_NAME)"
 
 # ------------- Default Setup and Cleanup --------------
 
@@ -46,6 +58,10 @@ all: env check terraform-init terraform-plan terraform-apply
 
 # Clean up: destroy the Terraform-managed infrastructure
 clean: terraform-destroy
+
+clean-env:
+	@echo "Cleaning up environment variables from ~/.bashrc..."
+	@bash cleanup_env.sh  # Run the cleanup script to remove environment variables
 
 # Prevent make from looking for files with these names
 .PHONY: env check terraform-init terraform-plan terraform-apply terraform-destroy all clean

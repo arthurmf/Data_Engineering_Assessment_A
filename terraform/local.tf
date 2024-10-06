@@ -1,15 +1,17 @@
-# Declare variables
-variable "aws_region" {}
+# Declare variables for AWS credentials
+variable "aws_default_region" {}
 variable "aws_profile" {}
 variable "environment" {}
+variable "bucket_name" {}
 
 locals {
-    aws_region  = var.aws_region
+
+    aws_default_region  = var.aws_default_region
     aws_profile = var.aws_profile
     environment = var.environment
 
-    # AWS S3 Variables
-    bucket_name = "bucket-de-challenge-20241005"
+    # Use these locals for bucket name and other settings
+    bucket_name = var.bucket_name
     
     # Network variables defined as locals
     cidr_block_vpc              = "10.0.0.0/16"
@@ -18,7 +20,7 @@ locals {
     cidr_block_public_route_table = "0.0.0.0/0"    
 
     common_tags = {        
-        "Environment" = local.environment
+        "Environment" = var.environment
         "Owner" = "arthurmf"
         "Project" = "data-engineering-assessment"
     }    

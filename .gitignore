@@ -128,3 +128,6 @@ crash.log
 # Serverless directories
 .serverless
 node_modules
+
+# Ignore virtual environments
+.venv/

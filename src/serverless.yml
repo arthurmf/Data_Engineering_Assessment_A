@@ -9,6 +9,8 @@ provider:
   deploymentBucket:
     name: de-challenge-sls-deployment-bucket
     serverSideEncryption: AES256
+  environment:
+    BUCKET_NAME: ${env:BUCKET_NAME}
 
 functions:
   hello:
