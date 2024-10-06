@@ -1,0 +1,12 @@
+# "service" is the name of this project. This will also be added to your AWS resource names.
+service: etl
+
+frameworkVersion: '4'
+
+provider:
+  name: aws
+  runtime: python3.12
+
+functions:
+  hello:
+    handler: handler.hello
