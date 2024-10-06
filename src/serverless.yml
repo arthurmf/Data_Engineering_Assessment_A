@@ -6,7 +6,13 @@ frameworkVersion: '4'
 provider:
   name: aws
   runtime: python3.12
+  deploymentBucket:
+    name: de-challenge-sls-deployment-bucket
+    serverSideEncryption: AES256
 
 functions:
   hello:
     handler: handler.hello
+
+plugins:
+  - serverless-deployment-bucket # Always deploy at the same bucket

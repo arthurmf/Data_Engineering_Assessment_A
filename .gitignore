@@ -124,3 +124,7 @@ crash.log
 *.backup
 
 # End of Terraform specific files
+
+# Serverless directories
+.serverless
+node_modules
