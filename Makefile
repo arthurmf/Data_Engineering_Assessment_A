@@ -51,17 +51,20 @@ terraform-destroy:
 		-var="environment=$(TF_VAR_ENVIRONMENT)" \
 		-var="bucket_name=$(TF_VAR_BUCKET_NAME)"
 
+# ------------- Serverless Framework Commands --------------
+
+# Deploy Serverless application
+sls-deploy:
+	@echo "Deploying Serverless application..."
+	@cd src && serverless deploy --stage $(ENVIRONMENT)
+
 # ------------- Default Setup and Cleanup --------------
 
-# Full setup: configure environment, verify variables, initialize Terraform, plan and apply infrastructure
-all: env check terraform-init terraform-plan terraform-apply
+# Full setup: configure environment, verify variables, initialize Terraform, plan, apply infrastructure, and deploy Serverless
+all: env check terraform-init terraform-plan terraform-apply sls-deploy
 
 # Clean up: destroy the Terraform-managed infrastructure
 clean: terraform-destroy
 
-clean-env:
-	@echo "Cleaning up environment variables from ~/.bashrc..."
-	@bash cleanup_env.sh  # Run the cleanup script to remove environment variables
-
 # Prevent make from looking for files with these names
-.PHONY: env check terraform-init terraform-plan terraform-apply terraform-destroy all clean
+.PHONY: env check terraform-init terraform-plan terraform-apply terraform-destroy sls-deploy all clean

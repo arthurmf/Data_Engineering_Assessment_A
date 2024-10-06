@@ -102,3 +102,33 @@ The key configuration files for Terraform are:
 
 3. **`local.tf`**  
    This file defines local variables that are used across the Terraform configuration files, including common tags, network CIDR blocks, and bucket names.
+
+## **Serverless Framework Deployment**
+
+This project includes a Serverless Framework configuration to deploy an ETL Lambda function. After setting up the environment variables and provisioning the AWS infrastructure with Terraform, you can deploy the Serverless application.
+
+Ensure the environment variables are correctly set by running `make env`.
+
+### **To deploy the Serverless application:**
+
+1. Install the Serverless Framework:
+   ```bash
+   npm install -g serverless
+   ```
+
+2. Navigate to the `src/` directory:
+   ```bash
+   cd src
+   ```
+
+3. Deploy the Serverless application to AWS:
+   ```bash
+   serverless deploy --stage dev
+   ```
+
+Alternatively, you can use the following `Makefile` command to handle deployment after Terraform has completed:
+```bash
+make sls-deploy
+```
+
+This command will automatically deploy the Serverless Framework configuration, making the ETL Lambda function available.
