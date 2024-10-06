@@ -3,6 +3,7 @@ variable "aws_default_region" {}
 variable "aws_profile" {}
 variable "environment" {}
 variable "bucket_name" {}
+variable "db_username" {}
 
 locals {
 
@@ -10,8 +11,11 @@ locals {
     aws_profile = var.aws_profile
     environment = var.environment
 
-    # Use these locals for bucket name and other settings
+    # Use this local for bucket name
     bucket_name = var.bucket_name
+
+    # Use this local for database name
+    db_username = var.db_username
     
     # Network variables defined as locals
     cidr_block_vpc              = "10.0.0.0/16"

@@ -71,3 +71,25 @@ resource "aws_route_table_association" "public_subnet_route_table_association_b"
   subnet_id      = aws_subnet.public_subnet_b.id
   route_table_id = aws_route_table.public_subnet_route_table_b.id
 }
+
+# ================ DB Subnets Groups ===================
+resource "aws_db_subnet_group" "rds_public_subnet" {
+  name       = "rds_public_subnet_group"
+  subnet_ids = [aws_subnet.public_subnet_a.id, aws_subnet.public_subnet_b.id]
+  tags = merge(local.common_tags, {"Name" = "db_subnet_group"})
+}
+
+# ================ DB Security Group ===================
+resource "aws_security_group" "rds_sg" {
+  name   = "rds_sg"
+  vpc_id = aws_vpc.aws_vpc.id
+
+  ingress {
+      description      = "Port 3306 Access - MySQL"
+      from_port         = 3306
+      to_port           = 3306
+      protocol         = "tcp"
+      cidr_blocks      = ["0.0.0.0/0"]
+  }
+  tags = merge(local.common_tags, {"Name" = "rds_sg"})
+}

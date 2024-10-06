@@ -31,7 +31,8 @@ terraform-plan:
 		-var="aws_profile=$(TF_VAR_AWS_PROFILE)" \
 		-var="aws_default_region=$(TF_VAR_AWS_DEFAULT_REGION)" \
 		-var="environment=$(TF_VAR_ENVIRONMENT)" \
-		-var="bucket_name=$(TF_VAR_BUCKET_NAME)"
+		-var="bucket_name=$(TF_VAR_BUCKET_NAME)" \
+		-var="db_username=$(TF_VAR_DB_USERNAME)"
 
 # Apply Terraform Infrastructure
 terraform-apply:
@@ -40,7 +41,8 @@ terraform-apply:
 		-var="aws_profile=$(TF_VAR_AWS_PROFILE)" \
 		-var="aws_default_region=$(TF_VAR_AWS_DEFAULT_REGION)" \
 		-var="environment=$(TF_VAR_ENVIRONMENT)" \
-		-var="bucket_name=$(TF_VAR_BUCKET_NAME)"
+		-var="bucket_name=$(TF_VAR_BUCKET_NAME)" \
+		-var="db_username=$(TF_VAR_DB_USERNAME)"
 
 # Destroy Terraform Infrastructure
 terraform-destroy:
@@ -49,7 +51,8 @@ terraform-destroy:
 		-var="aws_profile=$(TF_VAR_AWS_PROFILE)" \
 		-var="aws_default_region=$(TF_VAR_AWS_DEFAULT_REGION)" \
 		-var="environment=$(TF_VAR_ENVIRONMENT)" \
-		-var="bucket_name=$(TF_VAR_BUCKET_NAME)"
+		-var="bucket_name=$(TF_VAR_BUCKET_NAME)" \
+		-var="db_username=$(TF_VAR_DB_USERNAME)"
 
 # ------------- Serverless Framework Commands --------------
 

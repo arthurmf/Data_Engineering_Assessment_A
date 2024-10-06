@@ -76,6 +76,13 @@ The `Makefile` includes commands to automate setting up the environmentm, provis
    Destroys all infrastructure created by Terraform and removes the Serverless application
 
 ---
+## **Important: Note on database password security storage**
+
+When generating sensitive information such as database passwords using Terraform (as seen in this configuration with the `random_password` resource), the generated values are stored in the Terraform state file (`tfstate`). If this state file is stored locally, there's a risk it could inadvertently be exposed if committed to version control, such as GitHub. To mitigate this risk, it is highly recommended to use a remote backend (such as AWS S3 with encryption and proper access control) to securely store the state file.
+
+For more information on securely storing sensitive data in the Terraform state file, please refer to [Terraform's documentation on sensitive data in state](https://developer.hashicorp.com/terraform/language/state/sensitive-data).
+
+---
 
 ## **Important: Environment Variable Persistence**
 

@@ -11,12 +11,14 @@ def check_environment_variables():
         aws_default_region = config('AWS_DEFAULT_REGION')
         environment = config('ENVIRONMENT')
         bucket_name = config('BUCKET_NAME')
+        db_USERNAME = config('DB_USERNAME')
 
         # Check Terraform-specific variables (optional, if required for Terraform)
         tf_aws_profile = config('TF_VAR_AWS_PROFILE')
         tf_aws_default_region = config('TF_VAR_AWS_DEFAULT_REGION')
         tf_environment = config('TF_VAR_ENVIRONMENT')
         tf_bucket_name = config('TF_VAR_BUCKET_NAME')
+        tf_db_USERNAME = config('TF_VAR_DB_USERNAME')
         
     except UndefinedValueError as e:
         raise KeyError(f"Missing environment variable: {e}")
@@ -26,10 +28,12 @@ def check_environment_variables():
           f"AWS_DEFAULT_REGION: {aws_default_region}\n"
           f"ENVIRONMENT: {environment}\n"
           f"BUCKET_NAME: {bucket_name}\n"
+          f"DB_USERNAME: {db_USERNAME}\n"
           f"TF_VAR_AWS_PROFILE: {tf_aws_profile}\n"
           f"TF_VAR_AWS_DEFAULT_REGION: {tf_aws_default_region}\n"
           f"TF_VAR_ENVIRONMENT: {tf_environment}\n"
           f"TF_VAR_BUCKET_NAME: {tf_bucket_name}\n"
+          f"TF_VAR_DB_USERNAME: {tf_db_USERNAME}\n"
 )
 
 # Example usage:
