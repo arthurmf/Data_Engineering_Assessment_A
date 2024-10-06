@@ -131,3 +131,6 @@ node_modules
 
 # Ignore virtual environments
 .venv/
+
+# AWS Lambda Layers
+layers/

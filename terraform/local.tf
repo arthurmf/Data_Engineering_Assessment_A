@@ -16,6 +16,9 @@ locals {
 
     # Use this local for database name
     db_username = var.db_username
+
+    # Use this local for secrets name
+    secrets_name = "rds-secret-de-challenge"
     
     # Network variables defined as locals
     cidr_block_vpc              = "10.0.0.0/16"

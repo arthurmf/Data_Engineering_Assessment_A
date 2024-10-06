@@ -22,13 +22,6 @@ resource "aws_s3_bucket_object" "bucket_key" {
     bucket = aws_s3_bucket.de_challenge_bucket.id
     key    = "data-source/"
 }
-# ========== Random Password for RDS ==========
-
-resource "random_password" "master"{
-  length           = 16
-  special          = true
-  override_special = "_!%^"
-}
 
 # ========== RDS ==========
 
@@ -38,9 +31,9 @@ resource "aws_db_instance" "mysql_instance" {
     engine                      = "mysql"
     engine_version              = "8.0.35"
     instance_class              = "db.t4g.micro"
-    name                        = "rds_mysql_de_challenge"
-    username                    = local.db_username
-    password                    = random_password.master.result
+    name                        = jsondecode(aws_secretsmanager_secret_version.rds_secret_value.secret_string)["db_name"]
+    username                    = jsondecode(aws_secretsmanager_secret_version.rds_secret_value.secret_string)["username"]
+    password                    = jsondecode(aws_secretsmanager_secret_version.rds_secret_value.secret_string)["password"]
     publicly_accessible         = "true"
     db_subnet_group_name        = aws_db_subnet_group.rds_public_subnet.name
     vpc_security_group_ids      = [aws_security_group.rds_sg.id]
@@ -48,4 +41,9 @@ resource "aws_db_instance" "mysql_instance" {
     multi_az                    = false
     skip_final_snapshot         = true
     tags = merge(local.common_tags, {"Name" = "rds-de-challenge"})
+
+    # Ensure RDS is created only after the secret is available
+    depends_on = [
+        aws_secretsmanager_secret_version.rds_secret_value
+    ]
 }

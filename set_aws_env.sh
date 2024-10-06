@@ -33,7 +33,7 @@ echo "export TF_VAR_ENVIRONMENT=\"$ENVIRONMENT\"" >> ~/.bashrc
 echo "export TF_VAR_BUCKET_NAME=\"$BUCKET_NAME\"" >> ~/.bashrc
 echo "export TF_VAR_DB_USERNAME=\"$DB_USERNAME\"" >> ~/.bashrc
 
-# Source the .env file to make the changes take effect in the current session
+# Source the .bashrc file to make the changes take effect in the current session
 source ~/.bashrc
 
-echo "Environment variables have been configured and persisted to .env!"
+echo "Environment variables have been configured and persisted to .bashrc!"

@@ -5,10 +5,10 @@ frameworkVersion: '4'
 
 provider:
   name: aws
-  profile: ${env:AWS_PROFILE}
   runtime: python3.12
   stage: ${opt:stage, 'dev'}
   memorySize: 512
+  timeout: 30
   deploymentBucket:
     name: de-challenge-sls-deployment-bucket
     serverSideEncryption: AES256
@@ -17,6 +17,8 @@ provider:
     STAGE: ${env:ENVIRONMENT}
     POWERTOOLS_SERVICE_NAME: etl
     POWERTOOLS_LOG_LEVEL: INFO
+    RDS_SECRETS_ARN: ${env:RDS_SECRETS_ARN}
+    RDS_ENDPOINT: ${env:RDS_ENDPOINT}
 
 package:
   individually: true
@@ -25,18 +27,20 @@ package:
     - '!node_modules/**'
 
 functions:
-  hello:
+  etl:
     handler: handler.etl
     layers:
       - arn:aws:lambda:us-east-1:017000801446:layer:AWSLambdaPowertoolsPythonV3-python312-x86:1
       - arn:aws:lambda:us-east-1:336392948345:layer:AWSSDKPandas-Python312:13
+      - { Ref: PymysqlLambdaLayer }
     events:
       - s3: # So lambda can be triggered when object is created at S3 defined path
           bucket: ${self:provider.environment.BUCKET_NAME}
           event: s3:ObjectCreated:*
           rules:
             - prefix: data-source/
-          existing: true    
+          existing: true
+    
     iamRoleStatements:
       - Effect: Allow
         Action:
@@ -45,6 +49,18 @@ functions:
         Resource:
           - "arn:aws:s3:::${self:provider.environment.BUCKET_NAME}/*"
           - "arn:aws:s3:::${self:provider.environment.BUCKET_NAME}"
+      
+      - Effect: Allow
+        Action:
+          - secretsmanager:GetSecretValue
+        Resource:
+          - ${self:provider.environment.RDS_SECRETS_ARN}
+
+layers:
+  pymysql:
+    path: layers/pymysql
+    compatibleRuntimes:
+      - python3.12
 
 plugins:
   - serverless-deployment-bucket # Allow always deploy at the same bucket
