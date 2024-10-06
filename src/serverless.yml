@@ -5,16 +5,33 @@ frameworkVersion: '4'
 
 provider:
   name: aws
+  profile: ${env:AWS_PROFILE}
   runtime: python3.12
+  stage: ${opt:stage, 'dev'}
   deploymentBucket:
     name: de-challenge-sls-deployment-bucket
     serverSideEncryption: AES256
   environment:
     BUCKET_NAME: ${env:BUCKET_NAME}
+    STAGE: ${env:ENVIRONMENT}
 
 functions:
   hello:
     handler: handler.hello
+    events:
+      - s3: # So lambda can be triggered when object is created at S3 defined path
+          bucket: ${self:provider.environment.BUCKET_NAME}
+          event: s3:ObjectCreated:*
+          rules:
+            - prefix: data-source/
+          existing: true    
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - s3:GetObject
+        Resource:
+          - "arn:aws:s3:::${self:provider.environment.BUCKET_NAME}/*"
 
 plugins:
-  - serverless-deployment-bucket # Always deploy at the same bucket
+  - serverless-deployment-bucket # Allow always deploy at the same bucket
+  - serverless-iam-roles-per-function # Allow creating IAM roles per function
